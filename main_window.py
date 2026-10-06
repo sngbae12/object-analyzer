@@ -34,7 +34,16 @@ from PyQt5.QtWidgets import (
 from PIL import Image
 
 from canvas import ImageCanvas, pil_to_qpixmap
-from image_ops import EditState, MosaicRect, TextOverlay, apply_edits, open_image, output_size, save_image
+from image_ops import (
+    EditState,
+    MosaicRect,
+    TextOverlay,
+    apply_edits,
+    open_image,
+    output_size,
+    save_image,
+    unique_edited_path,
+)
 
 IMAGE_FILTER = "이미지 파일 (*.jpg *.jpeg *.png *.bmp *.gif *.webp *.tif *.tiff)"
 
@@ -100,10 +109,12 @@ class SaveWorker(QThread):
 
     def run(self) -> None:
         saved = 0
+        taken: set = set()
         try:
             for index, path in enumerate(self.paths, start=1):
                 name = os.path.splitext(os.path.basename(path))[0]
-                out_path = os.path.join(self.folder, f"{name}_edited{self.ext}")
+                out_path = unique_edited_path(self.folder, name, self.ext, taken)
+                taken.add(os.path.normcase(os.path.abspath(out_path)))
                 image = open_image(path)
                 result = apply_edits(image, self.state, for_preview=False)
                 save_image(result, out_path)

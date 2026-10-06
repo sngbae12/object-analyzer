@@ -170,6 +170,32 @@ def apply_edits(
     return result
 
 
+def unique_edited_path(
+    folder: str,
+    stem: str,
+    ext: str,
+    taken: Optional[set] = None,
+) -> str:
+    """기존 파일과 이번 저장에서 이미 쓴 이름을 피해 *_edited, *_edited_1 ... 경로를 만든다."""
+    reserved = taken if taken is not None else set()
+    if not ext.startswith("."):
+        ext = f".{ext}"
+
+    def is_taken(path: str) -> bool:
+        abs_path = os.path.normcase(os.path.abspath(path))
+        return os.path.exists(path) or abs_path in reserved
+
+    candidate = os.path.join(folder, f"{stem}_edited{ext}")
+    if not is_taken(candidate):
+        return candidate
+    index = 1
+    while True:
+        candidate = os.path.join(folder, f"{stem}_edited_{index}{ext}")
+        if not is_taken(candidate):
+            return candidate
+        index += 1
+
+
 def save_image(image: Image.Image, path: str) -> None:
     ext = os.path.splitext(path)[1].lower()
     if ext in {".jpg", ".jpeg"}:
