@@ -1,0 +1,54 @@
+# 가상환경
+.venv/
+venv/
+env/
+ENV/
+
+# 캐시
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# 로그 / 임시 파일
+*.log
+*.tmp
+*.temp
+실행오류.txt
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# 환경 변수 / 비밀
+.env
+.env.*
+!.env.example
+
+# 개인 이미지·영상
+uploads/
+input/
+output/
+results/
+exports/
+edited/
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.webp
+*.tif
+*.tiff
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+
+# IDE
+.idea/
+.vscode/
+*.code-workspace
